@@ -23,8 +23,10 @@ class PlacemarkActivity : AppCompatActivity() {
 
         binding.btnAdd.setOnClickListener() {
             placemark.title = binding.placemarkTitle.text.toString()
+            placemark.description = binding.description.text.toString()
             if (placemark.title.isNotEmpty()) {
-                placemarks.add(placemark)
+
+                placemarks.add(placemark.copy())
                 i("add Button Pressed: ${placemark}")
                 for (i in placemarks.indices)
                 { i("Placemark[$i]:${this.placemarks[i]}") }
