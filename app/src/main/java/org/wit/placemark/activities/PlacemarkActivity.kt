@@ -1,6 +1,8 @@
 package org.wit.placemark.activities
 
 import android.content.Intent
+import android.location.Location
+import android.net.Uri
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.Menu
@@ -24,6 +26,9 @@ class PlacemarkActivity : AppCompatActivity() {
     lateinit var app: MainApp
     private lateinit var imageIntentLauncher: ActivityResultLauncher<Intent>
 
+    private lateinit var mapIntentLauncher : ActivityResultLauncher<Intent>
+    //var location = Location(52.245696, -7.139102, 15f)
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         var edit = false
@@ -46,6 +51,9 @@ class PlacemarkActivity : AppCompatActivity() {
             Picasso.get()
                 .load(placemark.image)
                 .into(binding.placemarkImage)
+            if (placemark.image != Uri.EMPTY) {
+                binding.chooseImage.setText(R.string.change_placemark_image)
+            }
         }
 
         binding.btnAdd.setOnClickListener() {
@@ -81,11 +89,21 @@ class PlacemarkActivity : AppCompatActivity() {
             setResult(RESULT_OK)
             finish()
         }
+        binding.placemarkLocation.setOnClickListener {
+            i ("Set Location Pressed")
+        }
 
         binding.chooseImage.setOnClickListener {
             showImagePicker(imageIntentLauncher)
         }
+
+        binding.placemarkLocation.setOnClickListener {
+
+            val launcherIntent = Intent(this, MapActivity::class.java)
+            mapIntentLauncher.launch(launcherIntent)
+        }
         registerImagePickerCallback()
+        registerMapCallback()
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
@@ -113,10 +131,16 @@ class PlacemarkActivity : AppCompatActivity() {
                             Picasso.get()
                                 .load(placemark.image)
                                 .into(binding.placemarkImage)
+                            binding.chooseImage.setText(R.string.change_placemark_image)
                         } // end of if
                     }
                     RESULT_CANCELED -> { } else -> { }
                 }
             }
         }
+    private fun registerMapCallback() {
+        mapIntentLauncher =
+            registerForActivityResult(ActivityResultContracts.StartActivityForResult())
+            { i("Map Loaded") }
     }
+}
