@@ -113,12 +113,18 @@ class PlacemarkActivity : AppCompatActivity() {
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
+            R.id.item_delete -> {
+                app.placemarks.delete(placemark)
+                finish()
+            }
             R.id.item_cancel -> {
                 finish()
             }
         }
         return super.onOptionsItemSelected(item)
     }
+
+
     private fun registerImagePickerCallback() {
         imageIntentLauncher =
             registerForActivityResult(ActivityResultContracts.StartActivityForResult())
